@@ -20,11 +20,8 @@ public class GravityGun : WeaponBase
     public SkinnedMeshRenderer mesh;
     float blendShapeVal;
 
-    float clawRetractTimer = 5;
+    float clawRetractTimer = 1;
     float clawRetractCount;
-
-    public string currentObject;
-
 
     private void OnEnable()
     {
@@ -52,11 +49,11 @@ public class GravityGun : WeaponBase
         if (isGrabbed)
         {
             isGrabbed = false;
-            pushed.collider.attachedRigidbody.velocity = Player.Instance.cam.worldCam.forward * 25;
+            pushed.collider.attachedRigidbody.AddForceAtPosition(Player.Instance.cam.worldCam.forward * 1000, pushed.point);
         }
         else
         {
-            pushed.collider.attachedRigidbody.velocity = Player.Instance.cam.worldCam.forward * 15;
+            pushed.collider.attachedRigidbody.AddForceAtPosition(Player.Instance.cam.worldCam.forward * 1000, pushed.point);
         }
     }
 
@@ -72,7 +69,7 @@ public class GravityGun : WeaponBase
                 }
                 else
                 {
-                    attracted.collider.attachedRigidbody.AddForce((Camera.main.transform.position - attracted.transform.position) * (20 / attracted.distance));
+                    attracted.collider.attachedRigidbody.AddForceAtPosition((Camera.main.transform.position - attracted.transform.position) * (20 / attracted.distance), attracted.point);
                 }
             }
         }
@@ -87,13 +84,16 @@ public class GravityGun : WeaponBase
     {
         base.Update();
 
+        if (clawRetractCount < clawRetractTimer) clawRetractCount += Time.deltaTime;
+
         if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit attracted, 5, ~(1 << LayerMask.NameToLayer("Player"))))
         {
             if (attracted.collider.attachedRigidbody != null)
             {
-                if (blendShapeVal != 0 && !isGrabbed)
+                if (blendShapeVal != 0 && !isGrabbed && clawRetractCount >= clawRetractTimer)
                 {
                     blendShapeVal = 0;
+                    clawRetractCount = 0;
                     FxManager.EmitSound(sound[0], true);
                 }
 
@@ -113,6 +113,15 @@ public class GravityGun : WeaponBase
                 FxManager.EmitSound(sound[8], true);
                 counter = 0;
             }
+            else
+            {
+                if (blendShapeVal != 100 && !isGrabbed && clawRetractCount >= clawRetractTimer)
+                {
+                    blendShapeVal = 100;
+                    clawRetractCount = 0;
+                    FxManager.EmitSound(sound[1], true);
+                }
+            }
         }
         else if(canShoot() && Player.Instance.inputs.GetButton("Fire1") && !isGrabbed)
         {
@@ -121,12 +130,14 @@ public class GravityGun : WeaponBase
         }
         else
         {
-            if(blendShapeVal != 100 && !isGrabbed)
+            if(blendShapeVal != 100 && !isGrabbed && clawRetractCount >= clawRetractTimer)
             {
                 blendShapeVal = 100;
+                clawRetractCount = 0;
                 FxManager.EmitSound(sound[1], true);
             }
         }
+
         mesh.SetBlendShapeWeight(0, Mathf.Lerp(mesh.GetBlendShapeWeight(0), blendShapeVal, Time.deltaTime * 10));
 
         if (isGrabbed)
@@ -161,15 +172,6 @@ public class GravityGun : WeaponBase
         }
         if (Input.GetKey(KeyCode.B)) attracted.collider.attachedRigidbody.drag++;
         if (Input.GetKey(KeyCode.N)) attracted.collider.attachedRigidbody.drag--;
-
-        try
-        {
-            currentObject = attracted.collider.attachedRigidbody.name;
-        }
-        catch (Exception)
-        {
-            currentObject = "<< None >>";
-        }
     }
 
     private void FixedUpdate()
