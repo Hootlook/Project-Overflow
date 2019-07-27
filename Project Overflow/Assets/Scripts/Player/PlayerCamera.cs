@@ -66,7 +66,7 @@ public class PlayerCamera : MonoBehaviour
         kickBack = Vector3.Lerp(kickBack, Vector3.zero, Time.deltaTime * 10);
 
 
-        worldCam.localRotation = Quaternion.Slerp(worldCam.localRotation, Quaternion.Euler(kickBack), Time.deltaTime * 50);
+        worldCam.localRotation = Quaternion.Euler(kickBack);
 
         viewCam.localPosition = Vector3.Lerp(viewCam.localPosition, new Vector3(movementX, movementY, 0), Time.deltaTime * smoothAmout);
 
