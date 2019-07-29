@@ -5087,6 +5087,83 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   transformPointA: {fileID: 1916260555}
   transformPointB: {fileID: 1691174919}
+--- !u!1 &1778326102
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1778326103}
+  - component: {fileID: 1778326106}
+  - component: {fileID: 1778326105}
+  m_Layer: 8
+  m_Name: Flare
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 0
+--- !u!4 &1778326103
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1778326102}
+  m_LocalRotation: {x: -0.67063063, y: -0.1945493, z: 0.18897054, w: 0.69043124}
+  m_LocalPosition: {x: 0.04, y: 0.028, z: 0.71}
+  m_LocalScale: {x: 0.01, y: 0.01, z: 0.01}
+  m_Children: []
+  m_Father: {fileID: 1607798112580096349}
+  m_RootOrder: 7
+  m_LocalEulerAnglesHint: {x: -58.487003, y: -87.27901, z: 86.810005}
+--- !u!33 &1778326106
+MeshFilter:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1778326102}
+  m_Mesh: {fileID: 10209, guid: 0000000000000000e000000000000000, type: 0}
+--- !u!23 &1778326105
+MeshRenderer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1778326102}
+  m_Enabled: 1
+  m_CastShadows: 1
+  m_ReceiveShadows: 1
+  m_DynamicOccludee: 1
+  m_MotionVectors: 1
+  m_LightProbeUsage: 1
+  m_ReflectionProbeUsage: 1
+  m_RenderingLayerMask: 1
+  m_RendererPriority: 0
+  m_Materials:
+  - {fileID: 2100000, guid: 995f8313cc8a42e429dc67e31bf90651, type: 2}
+  m_StaticBatchInfo:
+    firstSubMesh: 0
+    subMeshCount: 0
+  m_StaticBatchRoot: {fileID: 0}
+  m_ProbeAnchor: {fileID: 0}
+  m_LightProbeVolumeOverride: {fileID: 0}
+  m_ScaleInLightmap: 1
+  m_PreserveUVs: 0
+  m_IgnoreNormalsForChartDetection: 0
+  m_ImportantGI: 0
+  m_StitchLightmapSeams: 1
+  m_SelectedEditorRenderState: 3
+  m_MinimumChartSize: 4
+  m_AutoUVMaxDistance: 0.5
+  m_AutoUVMaxAngle: 89
+  m_LightmapParameters: {fileID: 0}
+  m_SortingLayerID: 0
+  m_SortingLayer: 0
+  m_SortingOrder: 0
 --- !u!1 &1916260554
 GameObject:
   m_ObjectHideFlags: 0
@@ -5245,6 +5322,7 @@ Transform:
   - {fileID: 1302606045}
   - {fileID: 649766588}
   - {fileID: 1691174919}
+  - {fileID: 1778326103}
   m_Father: {fileID: 0}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: -105.506004, z: 0}
@@ -5296,9 +5374,10 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 4fef78058328a0d438af5580701170ff, type: 3}
   - {fileID: 8300000, guid: bb2233fcb8693ad4e9fda0053d5867c5, type: 3}
   - {fileID: 8300000, guid: 67e36e3625ba1a244bf72ca4a63fd293, type: 3}
-  isGrabbed: 0
+  isGravitating: 0
   gunLight: {fileID: 1916260556}
   muzzleLight: {fileID: 1302606046}
+  flare: {fileID: 1778326103}
   sparks: {fileID: 649766590}
   lightning: {fileID: 1691174920}
   localSource: {fileID: 4706397506250326155}

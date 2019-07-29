@@ -9,6 +9,14 @@ public class Pistol : WeaponBase
         Player.Instance.armsAnim.Play("pistol shoot");
         Player.Instance.cam.AddPistolKickBack(2.5f, 5);
         FxManager.EmitSound(sound[0], true);
+
+        if (Physics.Raycast(Camera.main.transform.position, Camera.main.transform.forward, out RaycastHit hit, 20, ~(1 << LayerMask.NameToLayer("Player"))))
+        {
+            if (hit.collider.attachedRigidbody != null)
+            {
+                hit.collider.attachedRigidbody.AddForceAtPosition(Player.Instance.cam.worldCam.forward * 250, hit.point);
+            }
+        }
     }
 
     public override void Update()

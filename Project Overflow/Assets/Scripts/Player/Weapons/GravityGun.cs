@@ -13,6 +13,7 @@ public class GravityGun : WeaponBase
     Quaternion objectRotation;
     public Light gunLight;
     public Light muzzleLight;
+    public Transform flare;
     public ParticleSystem sparks;
     public Electric lightning;
 
@@ -23,17 +24,23 @@ public class GravityGun : WeaponBase
     float clawRetractTimer = 1;
     float clawRetractCount;
 
+    float flareSize;
+    float emission;
     float forceAmount;
+    private float flareTarget;
+    private float emissionTarget;
 
     private void OnEnable()
     {
         muzzleLight.gameObject.SetActive(true);
+        flare.gameObject.SetActive(true);
     }
 
     private void OnDisable()
     {
         muzzleLight.gameObject.SetActive(false);
-        if(isGravitating) isGravitating = false;
+        flare.gameObject.SetActive(false);
+        if (isGravitating) isGravitating = false;
     }
 
     public override void Update()
@@ -72,7 +79,7 @@ public class GravityGun : WeaponBase
             ClawsAction(false);
         }
 
-        if (Player.Instance.inputs.GetButtonUp("Fire2") && !triggerReleased) triggerReleased = !triggerReleased; 
+
 
         if (isGravitating)
         {
@@ -92,15 +99,29 @@ public class GravityGun : WeaponBase
             }
         }
 
+        if (Player.Instance.inputs.GetButtonUp("Fire2") && !triggerReleased) triggerReleased = !triggerReleased;
+
+        if (!isGravitating && triggerReleased && Player.Instance.inputs.GetButton("Fire2")) flareTarget = 0.04f;
+        else if (!isGravitating) flareTarget = 0.01f;
+
         if (gunLight.intensity > 2)
         {
             if(!lightning.gameObject.activeSelf) lightning.gameObject.SetActive(true);
             gunLight.intensity -= Time.deltaTime * 70;
+            if (flareTarget != 0.01f) flareTarget = 0.01f;
+
         }
         else
         {
             if (lightning.gameObject.activeSelf) lightning.gameObject.SetActive(false);
+            if (emissionTarget != 0.6f && !isGravitating) emissionTarget = 0.6f;
         }
+
+        emission = Mathf.Lerp(emission, emissionTarget, Time.deltaTime * 7);
+        mesh.material.SetColor("_EmissionColor", new Color(2, emission, 0));
+
+        flareSize = Mathf.Lerp(flareSize, flareTarget, Time.deltaTime * 7);
+        flare.localScale = Vector3.one * flareSize;
     }
 
     private void FixedUpdate()
@@ -110,8 +131,11 @@ public class GravityGun : WeaponBase
             if(target.collider.attachedRigidbody != targetBackup)
             {
                 targetBackup = target.collider.attachedRigidbody;
+                Player.Instance.armsAnim.SetBool("isHolding", true);
                 FxManager.EmitSound(sound[2], true);
                 localSource.pitch = Time.timeScale;
+                emissionTarget = 1;
+                flareTarget = 0.04f;
                 localSource.Play();
                 blendShapeVal = 0;
                 forceAmount = 0;
@@ -131,15 +155,19 @@ public class GravityGun : WeaponBase
     public void Shoot(RaycastHit pushed)
     {
         Player.Instance.cam.screenEffect.color = new Color(255, 255, 255, .5f);
+        Player.Instance.armsAnim.SetBool("isHolding", false);
+        Player.Instance.armsAnim.Play("GravityGun shoot");
         Player.Instance.cam.AddPistolKickBack(-20, 1);
         FxManager.EmitSound(sound[7], true);
         FxManager.EmitSound(sound[6], true);
         sparks.transform.position = pushed.collider.transform.position;
         lightning.transformPointB = pushed.collider.transform;
-        Player.Instance.armsAnim.Play("GravityGun shoot");
         gunLight.intensity = 25;
         targetBackup = null;
         localSource.Stop();
+        blendShapeVal = 0;
+        flareSize = 0.15f;
+        emission = 2;
         sparks.Play();
         counter = 0;
 
@@ -165,19 +193,15 @@ public class GravityGun : WeaponBase
             }
             else
             {
-                FxManager.EmitSound(sound[9], true);
+                FxManager.EmitSound(sound[4], true);
                 counter = 0;
             }
-        }
-        else if (canShoot() && Player.Instance.inputs.GetButton("Fire2"))
-        {
-            FxManager.EmitSound(sound[9], true);
-            counter = 0;
         }
     }
 
     private void DropObject()
     {
+        Player.Instance.armsAnim.SetBool("isHolding", false);
         FxManager.EmitSound(sound[3], true);
         triggerReleased = !triggerReleased;
         isGravitating = false;
@@ -188,7 +212,7 @@ public class GravityGun : WeaponBase
 
     private void DryFire()
     {
-        FxManager.EmitSound(sound[8], true);
+        FxManager.EmitSound(sound[9], true);
         counter = 0;
     }
 
