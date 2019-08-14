@@ -44,4 +44,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   clips: []
-  particlesObjects: []
+  particles: []
+  clipsPool: {fileID: 0}
+  clipsLoopPool: {fileID: 0}
+  particlesPool: {fileID: 0}

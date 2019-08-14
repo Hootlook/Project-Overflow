@@ -28,7 +28,15 @@ public class GravityGun : WeaponBase
     float emission;
     float forceAmount;
     private float flareTarget;
-    private float emissionTarget;
+    private float colorITarget;
+    [Range(0, 1)]
+    public float colorH;
+    [Range(0, 1)]
+    public float colorS;
+    [Range(0, 1)]
+    public float colorV;
+    [Range(0, 10)]
+    public float colorI;
 
     private void OnEnable()
     {
@@ -114,11 +122,11 @@ public class GravityGun : WeaponBase
         else
         {
             if (lightning.gameObject.activeSelf) lightning.gameObject.SetActive(false);
-            if (emissionTarget != 0.6f && !isGravitating) emissionTarget = 0.6f;
+            if (colorITarget != 1.5f && !isGravitating) colorITarget = 1.5f;
         }
 
-        emission = Mathf.Lerp(emission, emissionTarget, Time.deltaTime * 7);
-        mesh.material.SetColor("_EmissionColor", new Color(2, emission, 0));
+        colorI = Mathf.Lerp(colorI, colorITarget, Time.deltaTime * 7);
+        mesh.material.SetColor("_EmissionColor", Color.HSVToRGB(colorH,colorS,colorV) * colorI);
 
         flareSize = Mathf.Lerp(flareSize, flareTarget, Time.deltaTime * 7);
         flare.localScale = Vector3.one * flareSize;
@@ -134,7 +142,7 @@ public class GravityGun : WeaponBase
                 Player.Instance.armsAnim.SetBool("isHolding", true);
                 FxManager.EmitSound(sound[2], true);
                 localSource.pitch = Time.timeScale;
-                emissionTarget = 1;
+                colorITarget = 3;
                 flareTarget = 0.04f;
                 localSource.Play();
                 blendShapeVal = 0;
@@ -167,7 +175,7 @@ public class GravityGun : WeaponBase
         localSource.Stop();
         blendShapeVal = 0;
         flareSize = 0.15f;
-        emission = 2;
+        colorITarget = 5;
         sparks.Play();
         counter = 0;
 

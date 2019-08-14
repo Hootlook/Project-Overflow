@@ -5382,6 +5382,10 @@ MonoBehaviour:
   lightning: {fileID: 1691174920}
   localSource: {fileID: 4706397506250326155}
   mesh: {fileID: 8062766013706219456}
+  colorH: 0.05
+  colorS: 1
+  colorV: 1
+  colorI: 1.5
 --- !u!82 &4706397506250326155
 AudioSource:
   m_ObjectHideFlags: 0

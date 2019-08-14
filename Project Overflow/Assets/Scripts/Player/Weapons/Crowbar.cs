@@ -15,6 +15,10 @@ public class Crowbar : WeaponBase
                 Player.Instance.cam.AddPistolKickBack(5);
                 Player.Instance.armsAnim.Play("crowbar hit");
             }
+            if (hit.collider.attachedRigidbody != null)
+            {
+                hit.collider.attachedRigidbody.AddForceAtPosition(Player.Instance.cam.worldCam.forward * 250, hit.point);
+            }
         }
         else
         {
